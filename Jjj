@@ -1,0 +1,33 @@
+<button type="button" class="btn btn-default" id="custom-file-button">
+    <input type="file" id="file_logo" name="file_logo" class="form-control" accept="image/*" style="position: absolute; left: 0; top: 0; opacity: 0; width: 100%; height: 100%;">
+    <i class="fa fa-folder-open m-r-5"></i>Browse
+</button>
+<div class="clearfix"></div>
+<div class="single-image image-holder-wrapper clearfix">
+    @if (!empty($brand->file_logo))
+        <img src="{{ $brand->file_logo }}" alt="Logo" class="image-holder" id="image-preview" style="max-width: 200px; max-height: 200px;">
+    @else
+        <div class="image-holder placeholder" id="image-preview">
+            <i class="fa fa-picture-o"></i>
+        </div>
+    @endif
+</div>
+<script>
+    $(document).ready(function () {
+        const fileInput = $('#file_logo');
+
+        fileInput.on('change', function (event) {
+            const file = event.target.files[0];
+            if (!file || !file.type.startsWith('image/')) return;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const imgElement = `<img src="${e.target.result}" alt="Preview" class="image-holder" id="image-preview" style="max-width: 200px; max-height: 200px;">`;
+
+                // Thay toàn bộ phần tử #image-preview (có thể là <div> hoặc <img>)
+                $('#image-preview').replaceWith(imgElement);
+            };
+            reader.readAsDataURL(file);
+        });
+    });
+</script>
