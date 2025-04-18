@@ -1,0 +1,31 @@
+<script>
+    $(document).ready(function () {
+        const fileInput = $('#file_logo');
+
+        fileInput.on('change', function (event) {
+            const file = event.target.files[0];
+            if (!file || !file.type.startsWith('image/')) return;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const imagePreview = $('#image-preview');
+
+                const newImg = $('<img>', {
+                    src: e.target.result,
+                    alt: 'Logo',
+                    class: 'image-holder',
+                    id: 'image-preview',
+                    css: {
+                        'max-width': '200px',
+                        'max-height': '200px'
+                    }
+                });
+
+                // Thay thế #image-preview bằng ảnh mới
+                imagePreview.replaceWith(newImg);
+            };
+
+            reader.readAsDataURL(file);
+        });
+    });
+</script>
