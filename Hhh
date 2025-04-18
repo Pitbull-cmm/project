@@ -1,0 +1,50 @@
+<script>
+    $(document).ready(function () {
+        const fileInput = $('#file_logo');
+        let previewHolder = $('#image-preview');
+        const originalPreview = previewHolder.prop('outerHTML'); // Lưu nguyên phần preview ban đầu
+
+        fileInput.on('change', function (event) {
+            const file = event.target.files[0];
+            if (!file || !file.type.startsWith('image/')) return;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const imagePath = e.target.result;
+
+                // Nếu là <img>, đổi src; nếu là <div>, thay bằng <img>
+                if (previewHolder.prop('tagName').toLowerCase() === 'img') {
+                    previewHolder.attr('src', imagePath);
+                } else {
+                    const img = $('<img>', {
+                        src: imagePath,
+                        alt: 'Brand Logo',
+                        class: 'image-holder',
+                        id: 'image-preview',
+                        css: {
+                            'max-width': '200px',
+                            'max-height': '200px'
+                        }
+                    });
+                    previewHolder.replaceWith(img);
+                }
+
+                // Cập nhật lại biến vì đã replace
+                previewHolder = $('#image-preview');
+            };
+            reader.readAsDataURL(file);
+        });
+
+        $('.cancel-button').on('click', function () {
+            $('#image-preview').replaceWith(originalPreview);
+            fileInput.val('');
+            previewHolder = $('#image-preview'); // Cập nhật lại biến
+        });
+
+        $(document).on('click', '.remove-image', function () {
+            $('#image-preview').replaceWith(`<div class="image-holder placeholder" id="image-preview"><i class="fa fa-picture-o"></i></div>`);
+            fileInput.val('');
+            previewHolder = $('#image-preview'); // Cập nhật lại biến
+        });
+    });
+</script>
